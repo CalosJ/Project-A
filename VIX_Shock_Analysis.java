@@ -58,42 +58,58 @@ double value;
         //     System.out.println(percentArray.get(i).date + ", " + percentArray.get(i).value);
         // }
 
-
-        System.out.println("=== VIX UP > 20% ===");
+        // arraylist for each percentage
+        ArrayList<StockRecord> aboveP20Ar = new ArrayList<>();
+        ArrayList<StockRecord> ArP10toP20 = new ArrayList<>();
+        ArrayList<StockRecord> belowN20Ar = new ArrayList<>();
+        ArrayList<StockRecord> ArN10toN20 = new ArrayList<>();
+ 
+ 
+        //  This part is to  Identify events: VIX up >10%, >20%, down >10%, down >20%
 
         for (int i = 0 ; i < percentArray.size();  i++){
-            if (percentArray.get(i).value>20 ){
-                System.out.println(percentArray.get(i).date + " , " + percentArray.get(i).value);
+            if (percentArray.get(i).value>20 ){ // greater than 20
+                StockRecord temp = new StockRecord(percentArray.get(i).date,percentArray.get(i).value);
+                aboveP20Ar.add(temp);
+            }
+            else if ( percentArray.get(i).value>10){ // 10 > percentage < 20
+                StockRecord temp = new StockRecord(percentArray.get(i).date,percentArray.get(i).value);
+                ArP10toP20.add(temp);
+
+            }
+            else if (percentArray.get(i).value < -20){ // value < -20
+                StockRecord temp = new StockRecord(percentArray.get(i).date,percentArray.get(i).value);
+                belowN20Ar.add(temp);
+            }
+            else if (percentArray.get(i).value < -10){ // value < -10 but greater than > -20
+                StockRecord temp = new StockRecord(percentArray.get(i).date,percentArray.get(i).value);
+                ArN10toN20.add(temp);
             }
             
         }
-       //Range from 10 to 20 
-        System.out.println("=== VIX UP > 10% ===");
-        for (int i = 0 ; i < percentArray.size(); i ++){
-            if (percentArray.get(i).value>10 &&  percentArray.get(i).value< 20){
-                System.out.println(percentArray.get(i).date + " , " + percentArray.get(i).value);
-            }
+
+         // printing  out the events when VIX up >10%, >20%, down >10%, down >20%
+        System.out.println("20% and above ");
+        for (int i = 0 ; i< aboveP20Ar.size(); i++){
+             System.out.println(aboveP20Ar.get(i).date + ", " + aboveP20Ar.get(i).value);
+        }
+        System.out.println();
+        System.out.println("10% to 20%");
+        for (int i = 0 ; i< ArP10toP20.size(); i++){
+             System.out.println(ArP10toP20.get(i).date + ", " + ArP10toP20.get(i).value);
+        }
+        System.out.println();
+        System.out.println("below -20%");
+        for (int i = 0 ; i< belowN20Ar.size(); i++){
+             System.out.println(belowN20Ar.get(i).date + ", " + belowN20Ar.get(i).value);
+        }
+        System.out.println();
+        System.out.println("-10% to -20");
+        for (int i = 0 ; i< ArN10toN20.size(); i++){
+             System.out.println(ArN10toN20.get(i).date + ", " + ArN10toN20.get(i).value);
         }
         
-        System.out.println("=== VIX Down < 20% ===");
-
-        for (int i = 0 ; i < percentArray.size();  i++){
-            if (percentArray.get(i).value < -20){
-                System.out.println(percentArray.get(i).date + " , " + percentArray.get(i).value);
-            }
-            
-        }
-       // range  from  -10 to -20;
-
-        System.out.println("=== VIX Down < 10% ===");
-        for (int i = 0 ; i < percentArray.size(); i ++){
-            if (percentArray.get(i).value < -10 && percentArray.get(i).value > -20) {
-                System.out.println(percentArray.get(i).date + " , " + percentArray.get(i).value);
-            }
-        }
-        
-
-        //what we have to is put this values in  arraylist .
+       
     }
 
 
