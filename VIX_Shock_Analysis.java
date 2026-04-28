@@ -62,15 +62,15 @@ double value;
         System.out.println("=== VIX UP > 20% ===");
 
         for (int i = 0 ; i < percentArray.size();  i++){
-            if (percentArray.get(i).value>20){
+            if (percentArray.get(i).value>20 ){
                 System.out.println(percentArray.get(i).date + " , " + percentArray.get(i).value);
             }
             
         }
-       
+       //Range from 10 to 20 
         System.out.println("=== VIX UP > 10% ===");
         for (int i = 0 ; i < percentArray.size(); i ++){
-            if (percentArray.get(i).value>10){
+            if (percentArray.get(i).value>10 &&  percentArray.get(i).value< 20){
                 System.out.println(percentArray.get(i).date + " , " + percentArray.get(i).value);
             }
         }
@@ -83,14 +83,17 @@ double value;
             }
             
         }
-       
+       // range  from  -10 to -20;
+
         System.out.println("=== VIX Down < 10% ===");
         for (int i = 0 ; i < percentArray.size(); i ++){
-            if (percentArray.get(i).value < -10){
+            if (percentArray.get(i).value < -10 && percentArray.get(i).value > -20) {
                 System.out.println(percentArray.get(i).date + " , " + percentArray.get(i).value);
             }
         }
         
+
+        //what we have to is put this values in  arraylist .
     }
 
 
