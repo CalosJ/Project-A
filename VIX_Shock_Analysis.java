@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 // this is our 
@@ -88,28 +90,48 @@ double value;
             
         }
 
-         // printing  out the events when VIX up >10%, >20%, down >10%, down >20%
-        System.out.println("20% and above ");
-        for (int i = 0 ; i< aboveP20Ar.size(); i++){
-             System.out.println(aboveP20Ar.get(i).date + ", " + aboveP20Ar.get(i).value);
+        // write VIX shock events to file
+        PrintWriter pw1 = new PrintWriter(new FileWriter("vix_above_20.txt"));
+        pw1.println("20% and above");
+        for (StockRecord r : aboveP20Ar) {
+            pw1.println(r.date + ", " + r.value);
         }
-        System.out.println();
-        System.out.println("10% to 20%");
-        for (int i = 0 ; i< ArP10toP20.size(); i++){
-             System.out.println(ArP10toP20.get(i).date + ", " + ArP10toP20.get(i).value);
+        pw1.close();
+
+        PrintWriter pw2 = new PrintWriter(new FileWriter("vix_10_to_20.txt"));
+        pw2.println("10% to 20%");
+        for (StockRecord r : ArP10toP20) {
+            pw2.println(r.date + ", " + r.value);
         }
-        System.out.println();
-        System.out.println("below -20%");
-        for (int i = 0 ; i< belowN20Ar.size(); i++){
-             System.out.println(belowN20Ar.get(i).date + ", " + belowN20Ar.get(i).value);
+        pw2.close();
+
+        PrintWriter pw3 = new PrintWriter(new FileWriter("vix_below_neg20.txt"));
+        pw3.println("below -20%");
+        for (StockRecord r : belowN20Ar) {
+            pw3.println(r.date + ", " + r.value);
         }
-        System.out.println();
-        System.out.println("-10% to -20");
-        for (int i = 0 ; i< ArN10toN20.size(); i++){
-             System.out.println(ArN10toN20.get(i).date + ", " + ArN10toN20.get(i).value);
+        pw3.close();
+
+        PrintWriter pw4 = new PrintWriter(new FileWriter("vix_neg10_to_neg20.txt"));
+        pw4.println("-10% to -20%");
+        for (StockRecord r : ArN10toN20) {
+            pw4.println(r.date + ", " + r.value);
         }
+        pw4.close();
         
-       
+       // Spx Data
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 
