@@ -191,13 +191,15 @@ const dayData = (upKey, downKey) => SHOCK_RESULTS.map(r => ({
   'SPX down': pct(r[downKey], r.total),
 }));
 
-// Three mutually exclusive outcomes that sum to 100%.
-// Mixed = exactly one of the two follow-up days was up.
+// Four mutually exclusive outcomes that sum to 100%.
+// "Up then Down" = day1 up, day2 down  -> r.day1Up - r.bothUp
+// "Down then Up" = day1 down, day2 up  -> r.day2Up - r.bothUp
 const jointData = SHOCK_RESULTS.map(r => ({
   category: r.label,
-  'Both up':   pct(r.bothUp,                       r.total),
-  'Mixed':     pct(r.atLeastOneUp - r.bothUp,      r.total),
-  'Both down': pct(r.bothDown,                     r.total),
+  'Both up':      pct(r.bothUp,              r.total),
+  'Down then Up': pct(r.day2Up - r.bothUp,   r.total),
+  'Up then Down': pct(r.day1Up - r.bothUp,   r.total),
+  'Both down':    pct(r.bothDown,            r.total),
 }));
 
 /* -------------------- reveal-on-scroll hook -------------------- */
@@ -332,9 +334,10 @@ function JointOutcomeChart() {
         <YAxis tick={{ fontSize: 11 }} tickFormatter={v => v + '%'} domain={[0, 100]} />
         <Tooltip contentStyle={tooltipStyle} formatter={v => v + '%'} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
-        <Bar dataKey="Both up"   stackId="a" fill={COLOR.success} animationDuration={1100} />
-        <Bar dataKey="Mixed"     stackId="a" fill={COLOR.info}    animationDuration={1100} animationBegin={150} />
-        <Bar dataKey="Both down" stackId="a" fill={COLOR.danger}  animationDuration={1100} animationBegin={300} />
+        <Bar dataKey="Both up"      stackId="a" fill={COLOR.success} animationDuration={1100} />
+        <Bar dataKey="Down then Up" stackId="a" fill={COLOR.info}    animationDuration={1100} animationBegin={120} />
+        <Bar dataKey="Up then Down" stackId="a" fill={COLOR.warning} animationDuration={1100} animationBegin={240} />
+        <Bar dataKey="Both down"    stackId="a" fill={COLOR.danger}  animationDuration={1100} animationBegin={360} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -427,8 +430,9 @@ function App() {
       <Reveal>
         <h3>Joint outcome over the next two days</h3>
         <div className="label-small">
-          Three mutually exclusive outcomes per shock category, summing to 100%:
-          both days up, mixed (exactly one up), or both days down.
+          Four mutually exclusive paths after each shock, summing to 100%:
+          both days up, down then up (recovery), up then down (fade), or both days down.
+          The green + blue portion at the bottom of each bar equals the % of events that ended up on day i+2.
         </div>
         <div className="chart-wrap"><JointOutcomeChart /></div>
       </Reveal>
