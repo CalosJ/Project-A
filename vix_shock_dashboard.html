@@ -191,11 +191,13 @@ const dayData = (upKey, downKey) => SHOCK_RESULTS.map(r => ({
   'SPX down': pct(r[downKey], r.total),
 }));
 
+// Three mutually exclusive outcomes that sum to 100%.
+// Mixed = exactly one of the two follow-up days was up.
 const jointData = SHOCK_RESULTS.map(r => ({
   category: r.label,
-  'Both up':         pct(r.bothUp,       r.total),
-  'At least one up': pct(r.atLeastOneUp, r.total),
-  'Both down':       pct(r.bothDown,     r.total),
+  'Both up':   pct(r.bothUp,                       r.total),
+  'Mixed':     pct(r.atLeastOneUp - r.bothUp,      r.total),
+  'Both down': pct(r.bothDown,                     r.total),
 }));
 
 /* -------------------- reveal-on-scroll hook -------------------- */
@@ -255,24 +257,6 @@ function YearlyLineChart() {
         <Line type="monotone" dataKey="VIX down 10–20%" stroke={COLOR.info}    strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 5 }} animationDuration={1400} animationBegin={300} animationEasing="ease-out" />
         <Line type="monotone" dataKey="VIX down > 20%"  stroke={COLOR.success} strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 5 }} animationDuration={1400} animationBegin={450} animationEasing="ease-out" />
       </LineChart>
-    </ResponsiveContainer>
-  );
-}
-
-function YearlyStackedBar() {
-  return (
-    <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={yearlyData} margin={{ top: 12, right: 24, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#eeeeee" />
-        <XAxis dataKey="year" interval={2} tick={{ fontSize: 11 }} />
-        <YAxis tick={{ fontSize: 11 }} />
-        <Tooltip contentStyle={tooltipStyle} />
-        <Legend wrapperStyle={{ fontSize: 12 }} />
-        <Bar dataKey="VIX up > 20%"     stackId="a" fill={COLOR.danger}  animationDuration={1200} />
-        <Bar dataKey="VIX up 10–20%"    stackId="a" fill={COLOR.warning} animationDuration={1200} animationBegin={120} />
-        <Bar dataKey="VIX down 10–20%"  stackId="a" fill={COLOR.info}    animationDuration={1200} animationBegin={240} />
-        <Bar dataKey="VIX down > 20%"   stackId="a" fill={COLOR.success} animationDuration={1200} animationBegin={360} />
-      </BarChart>
     </ResponsiveContainer>
   );
 }
@@ -348,9 +332,9 @@ function JointOutcomeChart() {
         <YAxis tick={{ fontSize: 11 }} tickFormatter={v => v + '%'} domain={[0, 100]} />
         <Tooltip contentStyle={tooltipStyle} formatter={v => v + '%'} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
-        <Bar dataKey="Both up"         fill={COLOR.success} animationDuration={1100} />
-        <Bar dataKey="At least one up" fill={COLOR.info}    animationDuration={1100} animationBegin={150} />
-        <Bar dataKey="Both down"       fill={COLOR.danger}  animationDuration={1100} animationBegin={300} />
+        <Bar dataKey="Both up"   stackId="a" fill={COLOR.success} animationDuration={1100} />
+        <Bar dataKey="Mixed"     stackId="a" fill={COLOR.info}    animationDuration={1100} animationBegin={150} />
+        <Bar dataKey="Both down" stackId="a" fill={COLOR.danger}  animationDuration={1100} animationBegin={300} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -410,20 +394,12 @@ function App() {
 
       <div style={{ height: 24 }} />
 
-      <div className="grid-2">
-        <Reveal delay="1">
-          <div className="card">
-            <div className="card-header">Share of events by category</div>
-            <div className="chart-wrap-sm"><CategoryDonut /></div>
-          </div>
-        </Reveal>
-        <Reveal delay="2">
-          <div className="card">
-            <div className="card-header">Stacked yearly composition</div>
-            <div className="chart-wrap-sm"><YearlyStackedBar /></div>
-          </div>
-        </Reveal>
-      </div>
+      <Reveal delay="1">
+        <div className="card">
+          <div className="card-header">Share of events by category</div>
+          <div className="chart-wrap-sm"><CategoryDonut /></div>
+        </div>
+      </Reveal>
 
       <div className="divider"></div>
 
@@ -450,6 +426,10 @@ function App() {
 
       <Reveal>
         <h3>Joint outcome over the next two days</h3>
+        <div className="label-small">
+          Three mutually exclusive outcomes per shock category, summing to 100%:
+          both days up, mixed (exactly one up), or both days down.
+        </div>
         <div className="chart-wrap"><JointOutcomeChart /></div>
       </Reveal>
 
